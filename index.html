@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dopravní podnik města</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Základní nastavení */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', Arial, sans-serif; background: #f5f5f5; }
+
+        /* Header s logem */
+        .header {
+            background: #004d40;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Hlavní navigace */
+        .navbar {
+            background: #00796b;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: #b2dfdb; }
+
+        /* Hlavní obsah */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Sekce pro tramvaje/autobusy */
+        .transport-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .transport-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Tlačítka */
+        .btn {
+            background: #009688;
+            color: white!important;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #004d40;
+            color: white;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Responzivita */
+        @media (max-width: 768px) {
+            .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="logo-dopravnik.png" alt="Logo" class="logo">
+        <h1>Dopravní podnik města</h1>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#"><i class="fas fa-bus"></i> Jízdní řády</a></li>
+            <li><a href="#"><i class="fas fa-ticket"></i> Jízdenky</a></li>
+            <li><a href="#"><i class="fas fa-map-marked-alt"></i> Sítě linek</a></li>
+            <li><a href="#"><i class="fas fa-exclamation-triangle"></i> Výluky</a></li>
+            <li><a href="#"><i class="fas fa-phone"></i> Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Sekce výluk -->
+        <div class="transport-card" style="background: #fff3e0;">
+            <h2><i class="fas fa-exclamation-circle"></i> Aktuální výluky</h2>
+            <p>Linka 12 - výluka v centru města do 31.12.2024</p>
+            <a href="#" class="btn">Více informací</a>
+        </div>
+
+        <!-- Sekce dopravních prostředků -->
+        <div class="transport-section">
+            <div class="transport-card">
+                <h3><i class="fas fa-tram"></i> Tramvajové linky</h3>
+                <ul>
+                    <li>Linka 1: Hlavní nádraží - Sídliště</li>
+                    <li>Linka 2: Centrum - Průmyslová zóna</li>
+                </ul>
+            </div>
+
+            <div class="transport-card">
+                <h3><i class="fas fa-bus"></i> Autobusové linky</h3>
+                <ul>
+                    <li>Linka 50: Nádraží - Letiště</li>
+                    <li>Linka 51: Centrum - Nemocnice</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Online nákup jízdenek -->
+        <div class="transport-card">
+            <h3><i class="fas fa-credit-card"></i> Elektronické jízdenky</h3>
+            <button class="btn">Koupit jízdenku</button>
+            <button class="btn">Dobít kartu</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <h4>Kontakt</h4>
+                <p><i class="fas fa-phone"></i> +420 800 123 456</p>
+                <p><i class="fas fa-envelope"></i> info@dopravnipodnik.cz</p>
+            </div>
+            <div>
+                <h4>Sociální sítě</h4>
+                <a href="#"><i class="fab fa-facebook"></i> Facebook</a><br>
+                <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
