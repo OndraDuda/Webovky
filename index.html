@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dopravní podnik města</title>
+    <title>DPO - Komplexní dopravní portál</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Základní nastavení */
+        /* Globální styly */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Roboto', Arial, sans-serif; background: #f5f5f5; }
-
-        /* Header s logem */
+        
+        /* Header */
         .header {
-            background: #004d40;
+            background: #10c2ee;
             color: white;
             padding: 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        .logo {
-            width: 60px;
-            height: 60px;
+        .logo { width: 60px; height: 60px; }
+
+        button:hover {
+        background-color: #0056b3 !important;
         }
 
-        /* Hlavní navigace */
+        /* Navigace */
         .navbar {
-            background: #00796b;
+            background: #0c91b3;
             padding: 1rem;
             position: sticky;
             top: 0;
+            z-index: 100;
         }
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .nav-links a {
             color: white;
@@ -45,122 +49,487 @@
         .nav-links a:hover { color: #b2dfdb; }
 
         /* Hlavní obsah */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
 
-        /* Sekce pro tramvaje/autobusy */
-        .transport-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
+        /* Společné komponenty */
         .transport-card {
             background: white;
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
-
-        /* Tlačítka */
         .btn {
-            background: #009688;
-            color: white!important;
+            background: #10c2ee;
+            color: white;
             padding: 0.8rem 1.5rem;
             border-radius: 5px;
-            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        .timetable, .ticket-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 1rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        /* Footer */
-        .footer {
-            background: #004d40;
+        /* Hlavička tabulky */
+        .timetable th, .ticket-table th {
+            background: #10c2ee;
             color: white;
-            padding: 3rem 1rem;
-            margin-top: 4rem;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
         }
 
+        /* Buňky */
+        .timetable td, .ticket-table td {
+            padding: 0.9rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+
+        /* Změna barvy pro každý druhý řádek */
+        .timetable tr:nth-child(even), .ticket-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Specifické sekce */
+        .search-box { background: #e3f2fd; padding: 2rem; border-radius: 10px; }
+        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .real-time-board { background: #10c2ee; color: white; padding: 1.5rem; border-radius: 8px; }
+        .timetable { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .timetable th, .timetable td { border: 1px solid #ddd; padding: 8px; }
+        .tram { color: #d32f2f; } .bus { color: #1976d2; }
+        .download-list li { margin: 1rem 0; padding: 0.5rem; background: #f0f0f0; border-radius: 5px; }
+        
         /* Responzivita */
         @media (max-width: 768px) {
-            .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .nav-links { gap: 1rem; }
             .header { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <img src="logo-dopravnik.png" alt="Logo" class="logo">
-        <h1>Dopravní podnik města</h1>
+        <img src="logo-dpo.png" alt="Logo DPO" class="logo">
+        <h1>Dopravní podnik Ostrava</h1>
     </header>
 
     <nav class="navbar">
         <ul class="nav-links">
-            <li><a href="#"><i class="fas fa-bus"></i> Jízdní řády</a></li>
-            <li><a href="#"><i class="fas fa-ticket"></i> Jízdenky</a></li>
-            <li><a href="#"><i class="fas fa-map-marked-alt"></i> Sítě linek</a></li>
-            <li><a href="#"><i class="fas fa-exclamation-triangle"></i> Výluky</a></li>
-            <li><a href="#"><i class="fas fa-phone"></i> Kontakt</a></li>
+            <li><a href="#home"><i class="fas fa-home"></i> Úvod</a></li>
+            <li><a href="#timetable"><i class="fas fa-clock"></i> Jízdní řády</a></li>
+            <li><a href="#tickets"><i class="fas fa-ticket"></i> Jízdenky</a></li>
+            <li><a href="#downloads"><i class="fas fa-download"></i> Ke stažení</a></li>
+            <li><a href="#info"><i class="fas fa-info"></i>Informace</a></li>
         </ul>
     </nav>
 
     <main class="container">
-        <!-- Sekce výluk -->
-        <div class="transport-card" style="background: #fff3e0;">
-            <h2><i class="fas fa-exclamation-circle"></i> Aktuální výluky</h2>
-            <p>Linka 12 - výluka v centru města do 31.12.2024</p>
-            <a href="#" class="btn">Více informací</a>
-        </div>
-
-        <!-- Sekce dopravních prostředků -->
-        <div class="transport-section">
-            <div class="transport-card">
-                <h3><i class="fas fa-tram"></i> Tramvajové linky</h3>
-                <ul>
-                    <li>Linka 1: Hlavní nádraží - Sídliště</li>
-                    <li>Linka 2: Centrum - Průmyslová zóna</li>
-                </ul>
+        <section id="jizdni-rad">
+          <h2><i class="fas fa-route"></i> Vyhledání spojení</h2>
+          <form>
+            <label for="line">Linka:</label>
+            <select id="line">
+              <option value="1">Linka 1</option>
+              <option value="2">Linka 2</option>
+              <option value="4">Linka 4</option>
+              <option value="5">Linka 5</option>
+              <option value="6">Linka 6</option>
+              <option value="7">Linka 7</option>
+              <option value="8">Linka 8</option>
+              <option value="10">Linka 10</option>
+              <option value="11">Linka 11</option>
+            </select>
+      
+            <label for="stop">Zastávka:</label>
+            <select id="stop">
+              <option value="Hlavní Nádraží">Hlavní nádraží</option>
+              <option value="Přívoz Hlučínská">Přívoz Hlučínská</option>
+              <option value="Hranečník">Hranečník</option>
+              <option value="Vozovna Moravská Ostrava, Plynárny">Vozovna Moravská Ostrava, Plynárny</option>
+              <option value="Dubina">Dubina</option>
+              <option value="Karolina">Karolina</option>
+              <option value="Výškovice">Výškovice</option>
+              <option value="Zábřeh">Zábřeh</option>
+              <option value="Nová Huť jížní brána">Nová Huť jížní brána</option>
+              <option value="Svinov mosty">Svinov mosty</option>
+              <option value="Martinov">Martinov</option>
+              <option value="Poruba Vozovna">Poruba Vozovna</option>
+              <option value="Poruba Vřesinská">Poruba Vřesinská</option>
+              <option value="Budišovice Zátiší">Budišovice zátiší</option>
+            </select>
+      
+            <label for="departureDate">Datum odjezdu:</label>
+            <input type="date" id="departureDate">
+      
+            <label for="departureTime">Čas odjezdu:</label>
+            <input type="time" id="departureTime">
+      
+            <!-- Stylované tlačítko -->
+            <button type="button" onclick="findConnection()" style="
+              margin-top: 10px;
+              padding: 10px;
+              background-color: #10c2ee;
+              color: white;
+              font-weight: bold;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              transition: background 0.3s;
+            ">Vyhledat spojení</button>
+          </form>
+      
+          <div id="timetable" style="margin-top: 30px; text-align: center;"></div>
+        </section>
+      
+        <!-- Jízdní řády -->
+        <section id="timetable" class="transport-card">
+            <h2><i class="fas fa-calendar-alt"></i> Jízdní řády</h2>
+            <div class="line-selector">
+                <button class="btn" onclick="showLine('tram1')">Linka 1</button>
+                <button class="btn" onclick="showLine('tram2')">Linka 2</button>
+                <button class="btn" onclick="showLine('tram4')">Linka 4</button>
+                <button class="btn" onclick="showLine('tram5')">Linka 5</button>
+                <button class="btn" onclick="showLine('tram6')">Linka 6</button>
+                <button class="btn" onclick="showLine('tram7')">Linka 7</button>
+                <button class="btn" onclick="showLine('tram8')">Linka 8</button>
+                <button class="btn" onclick="showLine('tram10')">Linka 10</button>
+                <button class="btn" onclick="showLine('tram11')">Linka 11</button>
             </div>
 
-            <div class="transport-card">
-                <h3><i class="fas fa-bus"></i> Autobusové linky</h3>
-                <ul>
-                    <li>Linka 50: Nádraží - Letiště</li>
-                    <li>Linka 51: Centrum - Nemocnice</li>
-                </ul>
+            <!-- Tramvaj 1 -->
+            <div id="tram1" class="line-schedule">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 1: Hlavní nádraží - Dubina</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Hlavní nádraží</td><td>5:00-23:30</td><td>6:00-23:00</td></tr>
+                    <tr><td>Dubina</td><td>5:20-23:50</td><td>6:20-23:20</td></tr>
+                </table>
             </div>
-        </div>
 
-        <!-- Online nákup jízdenek -->
-        <div class="transport-card">
-            <h3><i class="fas fa-credit-card"></i> Elektronické jízdenky</h3>
-            <button class="btn">Koupit jízdenku</button>
-            <button class="btn">Dobít kartu</button>
-        </div>
+            <div id="tram2" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 2: Hlavní nádraží - Výškovice</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Hlavní nádraží</td><td>5:00-23:30</td><td>6:00-23:00</td></tr>
+                    <tr><td>Výškovice</td><td>5:20-23:50</td><td>6:20-23:20</td></tr>
+                </table>
+            </div>
+
+            <div id="tram4" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 4: Nová Huť jížní brána, Hranečník - Martinov</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Nová Huť jížní brána</td><td>5:00-10:00 - 13:00-17:00</td><td>5:00-10:00 - 13:00-17:00</td></tr>
+                    <tr><td>Hranečník</td><td>5:00-22:15</td><td>5:00-22:00</td></tr>
+                    <tr><td>Martinov</td><td>5:00-22:10</td><td>5:00-22:00</td></tr>
+                </table>
+            </div>
+
+            <div id="tram5" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 5: Poruba Vřesinská - Budišovice Zátiší</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Poruba Vřesinská</td><td>5:00-22:00 (Každých 20 minut)</td><td>5:00-22:00 (Každých 40 minut)</td></tr>
+                    <tr><td>Budišovice Zátiší</td><td>5:00-22:00 (Každých 20 minut)</td><td>5:00-22:00 (Každých 40 minut)</td></tr>
+                </table>
+            </div>
+
+            <div id="tram6" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 6: Vozovna Moravská Ostrava/Plynárny - Výškovice</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Vozovna Moravská Ostrava, Plynárny</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                    <tr><td>Výškovice</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                </table>
+            </div>
+
+            <div id="tram7" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 7: Poruba Vřesinská, Poruba Vozovna - Výškovice</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Poruba Vřesinská</td><td>5:00-22:00 (Každých 20 minut)</td><td>5:00-22:00 (Každých 40 minut)</td></tr>
+                    <tr><td>Poruba Vozovna</td><td>5:00-22:00</td><td>5:00-22:00</td></tr>
+                    <tr><td>Výškovice</td><td>5:00-22:00</td><td>5:00-22:00</td></tr>
+                </table>
+            </div>
+
+            <div id="tram11" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 11: Zábřeh - Poruba vozovna</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Poruba vozovna</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                    <tr><td>Zábřeh</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                </table>
+            </div>
+
+            <div id="tram10" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Linka 10: Vozovna Moravská Ostrava/Plynárny, Hranečník - Dubina</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Vozovna Moravská Ostrava/Plynárny</td><td>5:00-7:00 - 13:00-14:00</td><td>Nejezdí</td></tr>
+                    <tr><td>Hranečník</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                    <tr><td>Dubina</td><td>5:00-10:00 - 13:00-17:00</td><td>Nejezdí</td></tr>
+                </table>
+            </div>
+
+            <div id="tram8" class="line-schedule" style="display:none">
+                <h3 class="tram"><i class="fas fa-tram"></i> Tramvaj 8: Hlavní nádraží, Přívoz Hlučínská - Poruba vozovna, Poruba vřesinská, Budišovice zátiší</h3>
+                <table class="timetable">
+                    <tr><th>Zastávka</th><th>Pracovní dny</th><th>Víkend</th></tr>
+                    <tr><td>Hlavní nádraží</td><td>Celý den</td><td>6:00-23:00</td></tr>
+                    <tr><td>Přívoz Hlučínská</td><td>Celý den</td><td>6:00-23:00</td></tr>
+                    <tr><td>Poruba vozovna</td><td>Celý den</td><td>6:00-23:00</td></tr>
+                    <tr><td>Poruba vřesinská</td><td>Celý den</td><td>6:00-23:00</td></tr>
+                    <tr><td>Budišovice zátiší</td><td>5:20-23:50</td><td>6:20-23:20</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Elektronické jízdenky -->
+        <section id="tickets" class="transport-card">
+            <h2><i class="fas fa-qrcode"></i> Elektronické jízdenky</h2>
+            
+            <!-- Tlačítka -->
+            <div class="ticket-actions">
+                <button class="btn" onclick="showTicketSection('ticket-purchase')">Nákup jízdenky</button>
+                <button class="btn" onclick="showTicketSection('ticket-recharge')">Dobít kartu</button>
+            </div>
+
+            <!-- Sekce: Nákup jízdenky -->
+            <div id="ticket-purchase" class="ticket-section" style="display: none;">
+                <h3 class="tickets"><i class="fas fa-shopping-cart"></i> Nákup Jízdenky</h3>
+                <table class="ticket-table">
+                    <tr><th>Tarif</th><th>Dospělí</th><th>Senior 65+</th><th>Děti do 6</th><th>Děti 6–15</th></tr>
+                    <tr><td>30 minut</td><td>30 Kč</td><td>10 Kč</td><td>Zdarma</td><td>18 Kč</td></tr>
+                    <tr><td>60 minut</td><td>60 Kč</td><td>20 Kč</td><td>Zdarma</td><td>36 Kč</td></tr>
+                    <tr><td>12 hodin</td><td>200 Kč</td><td>100 Kč</td><td>Zdarma</td><td>150 Kč</td></tr>
+                    <tr><td>24 hodin</td><td>400 Kč</td><td>200 Kč</td><td>Zdarma</td><td>300 Kč</td></tr>
+                </table>
+            </div>
+
+            <!-- Sekce: Dobít kartu -->
+            <div id="ticket-recharge" class="ticket-section" style="display: none;">
+                <h3 class="tickets"><i class="fas fa-wallet"></i> Dobít kartu</h3>
+                <table class="ticket-table">
+                    <tr><th>Tarif</th><th>Platba kartou všude</th><th>Platba hotově u DPO</th><th>Platba hotově u Externího prodejce</th></tr>
+                    <tr><td>Dobití za 300 Kč</td><td>300 Kč</td><td>313 Kč</td><td>325 Kč</td></tr>
+                    <tr><td>Dobití za 500 Kč</td><td>500 Kč</td><td>515 Kč</td><td>550 Kč</td></tr>
+                    <tr><td>Dobití za 1000 Kč</td><td>1000 Kč</td><td>1020 Kč</td><td>1075 Kč</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Ke stažení -->
+        <section id="downloads" class="transport-card">
+            <h2><i class="fas fa-file-pdf"></i> Dokumenty ke stažení</h2>
+            <ul class="download-list">
+                <li><a href="#"><i class="fas fa-download"></i> jízdní_řády.pdf</a></li>
+                <li><a href="#"><i class="fas fa-download"></i> mapa_linek.pdf</a></li>
+                <li><a href="#"><i class="fas fa-download"></i> ceník_jízdného.pdf</a></li>
+                <li><a href="#"><i class="fas fa-download"></i> smluvní_přepravní_podmínky.pdf</a></li>
+                <li><a href="#"><i class="fas fa-download"></i> seznam_linek.pdf</a></li>
+            </ul>
+        </section>
+
+        <section id="info" class="transport-card">
+            <h2><i class="fas fa-info"></i> Informace</h2>
+            <ul class="info"> 
+                <p>Dopravní podnik Ostrava (DPO)
+                    Dopravní podnik Ostrava a.s. je největší poskytovatel veřejné hromadné dopravy v Moravskoslezském kraji. Již od roku 1949 zajišťujeme spolehlivou, bezpečnou a moderní dopravu pro obyvatele i návštěvníky města Ostravy a jeho okolí.
+                    
+                    Co děláme
+                    Zajišťujeme městskou hromadnou dopravu prostřednictvím:
+                    
+                    Tramvají – páteřní síť MHD v Ostravě
+                    
+                    Autobusů – pokrýváme širší oblast města i přilehlých obcí
+                    
+                    Trolejbusů – ekologický způsob dopravy v centrálních oblastech města
+                    
+                    Naše flotila
+                    Modernizujeme náš vozový park s důrazem na ekologii, komfort a bezpečnost. Jako první v České republice jsme zavedli plně bezpapírové odbavení cestujících prostřednictvím platebních karet ve vozidlech.
+                    
+                    Inovace a digitalizace
+                    DPO je průkopníkem chytrých řešení v dopravě:
+                    
+                    Bezkontaktní odbavení
+                    
+                    Mobilní aplikace MojeDPO
+                    
+                    Online plánování trasy a informace o spojích v reálném čase
+                    
+                    Naše mise
+                    Chceme být spolehlivým partnerem v každodenním životě obyvatel Ostravy. Naším cílem je poskytovat kvalitní, dostupnou a udržitelnou dopravu, která posiluje mobilitu a snižuje dopravní zátěž města.
+                    
+                    Zajímavosti
+                    Ročně přepravíme přes 90 milionů cestujících
+                    
+                    V provozu máme přes 600 vozidel
+                    
+                    Aktivně podporujeme ekologické iniciativy a rozvoj čisté dopravy</p>
+            </ul>
+        </section>
     </main>
 
     <footer class="footer">
-        <div class="footer-grid">
-            <div>
-                <h4>Kontakt</h4>
-                <p><i class="fas fa-phone"></i> +420 800 123 456</p>
-                <p><i class="fas fa-envelope"></i> info@dopravnipodnik.cz</p>
-            </div>
-            <div>
-                <h4>Sociální sítě</h4>
-                <a href="#"><i class="fab fa-facebook"></i> Facebook</a><br>
-                <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
-            </div>
+        <div class="footer-content">
+            <p>Kontakt: info@dpo-ostrava.cz </p>
+            <p>Telefon: Pracovní dny: Non-stop linka: 800 123 456 / Víkendy: (9:00-17:00): 800 123 475</p>
+            <p>© 2025 Dopravní podnik Ostrava</p>
         </div>
     </footer>
+
+    <script>
+        // Přepínání jízdních řádů
+        function showLine(lineId) {
+            document.querySelectorAll('.line-schedule').forEach(el => el.style.display = 'none');
+            document.getElementById(lineId).style.display = 'block';
+        }
+    
+        // Simulace reálného času
+        function updateTimes() {
+            const times = document.querySelectorAll('.time');
+            times.forEach(time => {
+                const minutes = Math.floor(Math.random() * 10) + 1;
+                time.textContent = `za ${minutes} minut`;
+            });
+        }
+        setInterval(updateTimes, 30000);
+    
+        // Přepínání mezi sekcemi u jízdenek
+        function showTicketSection(sectionId) {
+            document.querySelectorAll('.ticket-section').forEach(el => {
+                el.style.display = 'none';
+            });
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'block';
+            }
+        }
+        function getNextDepartures(intervalMinutes = 10, count = 5) {
+            const now = new Date();
+            const departures = [];
+
+            let minutes = now.getMinutes();
+            let next = Math.ceil(minutes / intervalMinutes) * intervalMinutes;
+            let currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), next);
+
+            for (let i = 0; i < count; i++) {
+        departures.push(currentTime.toTimeString().substring(0, 5));
+        currentTime = new Date(currentTime.getTime() + intervalMinutes * 60000);
+        }
+
+            return departures;
+        }
+
+        function findConnection() {
+            const line = document.getElementById("line").value;
+            const stop = document.getElementById("stop").value;
+            const departures = getNextDepartures();
+
+            document.getElementById("timetable").innerHTML = `<h3>Odjezdy Linka ${line} ze zastávky ${stop}:</h3><ul>` +
+            departures.map(t => `<li>${t}</li>`).join("") + "</ul>";
+        }
+
+        function getNextDepartures(intervalMinutes = 10, count = 5) {
+            const now = new Date();
+            const departures = [];
+
+            let minutes = now.getMinutes();
+            let next = Math.ceil(minutes / intervalMinutes) * intervalMinutes;
+            let currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), next);
+
+            for (let i = 0; i < count; i++) {
+            departures.push(currentTime.toTimeString().substring(0, 5));
+            currentTime = new Date(currentTime.getTime() + intervalMinutes * 60000);
+            }
+
+            return departures;
+        }
+
+        function findConnection() {
+            const line = document.getElementById("line").value;
+            const stop = document.getElementById("stop").value;
+            const departures = getNextDepartures();
+
+            document.getElementById("timetable").innerHTML = `
+            <h3>Odjezdy linky ${line} ze zastávky "${stop}":</h3>
+            <table style="margin: 0 auto; border-collapse: collapse; margin-top: 10px;">
+                <tr>
+                <th style="padding: 8px 12px; border: 1px solid #ccc; background: #f5f5f5;">Čas odjezdu</th>
+                </tr>
+                ${departures.map(t => `<tr><td style="padding: 8px 12px; border: 1px solid #ccc;">${t}</td></tr>`).join("")}
+            </table>
+            `;
+        }
+
+        function pad(n) {
+            return n < 10 ? '0' + n : n;
+        } 
+
+        function generateTimes(line) {
+            const now = new Date();
+            const minutesToAdd = line === "8" ? 5 : Math.floor(Math.random() * 10) + 5;
+            const times = [];
+
+        for (let i = 0; i < 5; i++) {
+            const departure = new Date(now.getTime() + i * minutesToAdd * 60000);
+            const h = pad(departure.getHours());
+            const m = pad(departure.getMinutes());
+            times.push(`${h}:${m}`);
+        }   
+
+        return times;
+        }
+
+        function findConnection() {
+            const line = document.getElementById("line").value;
+            const stop = document.getElementById("stop").value;
+            const date = document.getElementById("departureDate").value || new Date().toISOString().split('T')[0];
+            const time = document.getElementById("departureTime").value || new Date().toTimeString().slice(0,5);
+            const result = document.getElementById("timetable");
+
+            const times = generateTimes(line);
+
+            let html = `
+                <h3>Odjezdy pro linku ${line} ze zastávky "${stop}"</h3>
+                <p><strong>Datum:</strong> ${date} | <strong>Čas:</strong> ${time}</p>
+                <table style="margin: 0 auto; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden;">
+                    <thead style="background: #4CAF50; color: white;">
+                        <tr>
+                            <th style="padding: 10px 20px;">#</th>
+                            <th style="padding: 10px 20px;">Čas odjezdu</th>
+                            <th style="padding: 10px 20px;">Linka</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            times.forEach((t, idx) => {
+                html += `
+                    <tr style="text-align: center; background: ${idx % 2 === 0 ? '#f2f2f2' : '#e0e0e0'};">
+                        <td style="padding: 10px;">${idx + 1}</td>
+                        <td style="padding: 10px;">${t}</td>
+                        <td style="padding: 10px;">${line}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                </tbody>
+                </table>
+            `;
+
+        result.innerHTML = html;
+    }
+    </script>    
 </body>
 </html>
